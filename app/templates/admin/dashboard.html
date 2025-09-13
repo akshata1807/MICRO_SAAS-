@@ -1,0 +1,188 @@
+{% extends "admin/layout.html" %}
+{% block title %}Admin Dashboard - MicroSaaS{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<!-- Statistics Cards -->
+<div class="row mb-4">
+  <div class="col-md-2 mb-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">{{ stats.total_users }}</p>
+      <p class="stats-label">Total Users</p>
+    </div>
+  </div>
+  <div class="col-md-2 mb-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">{{ stats.total_invoices }}</p>
+      <p class="stats-label">Invoices</p>
+    </div>
+  </div>
+  <div class="col-md-2 mb-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">{{ stats.total_resumes }}</p>
+      <p class="stats-label">Resumes</p>
+    </div>
+  </div>
+  <div class="col-md-2 mb-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">{{ stats.total_certificates }}</p>
+      <p class="stats-label">Certificates</p>
+    </div>
+  </div>
+  <div class="col-md-2 mb-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">{{ stats.total_qrcodes }}</p>
+      <p class="stats-label">QR Codes</p>
+    </div>
+  </div>
+  <div class="col-md-2 mb-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">{{ stats.total_subscriptions }}</p>
+      <p class="stats-label">Subscriptions</p>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Recent Users -->
+  <div class="col-md-6 mb-4">
+    <div class="stats-card">
+      <h5 class="mb-3">
+        <i class="fas fa-users text-primary mr-2"></i>Recent Users
+      </h5>
+      {% if stats.recent_users %}
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Joined</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in stats.recent_users %}
+              <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.id }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="text-center">
+          <a href="{{ url_for('admin.users') }}" class="btn btn-outline-primary btn-sm">View All Users</a>
+        </div>
+      {% else %}
+        <p class="text-muted">No users found.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Most Active Users -->
+  <div class="col-md-6 mb-4">
+    <div class="stats-card">
+      <h5 class="mb-3">
+        <i class="fas fa-chart-line text-primary mr-2"></i>Most Active Users
+      </h5>
+      {% if stats.active_users %}
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Invoices</th>
+                <th>Resumes</th>
+                <th>Certificates</th>
+                <th>QR Codes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in stats.active_users %}
+              <tr>
+                <td>{{ user.username }}</td>
+                <td><span class="badge badge-primary">{{ user.invoice_count }}</span></td>
+                <td><span class="badge badge-success">{{ user.resume_count }}</span></td>
+                <td><span class="badge badge-info">{{ user.certificate_count }}</span></td>
+                <td><span class="badge badge-warning">{{ user.qrcode_count }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="text-muted">No activity data available.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Daily Statistics Chart -->
+<div class="row">
+  <div class="col-12">
+    <div class="stats-card">
+      <h5 class="mb-3">
+        <i class="fas fa-chart-bar text-primary mr-2"></i>Daily Activity (Last 7 Days)
+      </h5>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Users</th>
+              <th>Invoices</th>
+              <th>Resumes</th>
+              <th>Certificates</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for day in stats.daily_stats %}
+            <tr>
+              <td>{{ day.date }}</td>
+              <td>{{ day.users }}</td>
+              <td>{{ day.invoices }}</td>
+              <td>{{ day.resumes }}</td>
+              <td>{{ day.certificates }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="stats-card">
+      <h5 class="mb-3">
+        <i class="fas fa-bolt text-primary mr-2"></i>Quick Actions
+      </h5>
+      <div class="row">
+        <div class="col-md-3 mb-2">
+          <a href="{{ url_for('admin.users') }}" class="btn btn-outline-primary btn-block">
+            <i class="fas fa-users mr-2"></i>Manage Users
+          </a>
+        </div>
+        <div class="col-md-3 mb-2">
+          <a href="{{ url_for('admin.files') }}" class="btn btn-outline-success btn-block">
+            <i class="fas fa-file-alt mr-2"></i>View Files
+          </a>
+        </div>
+        <div class="col-md-3 mb-2">
+          <a href="{{ url_for('admin.subscriptions') }}" class="btn btn-outline-info btn-block">
+            <i class="fas fa-credit-card mr-2"></i>Subscriptions
+          </a>
+        </div>
+        <div class="col-md-3 mb-2">
+          <a href="{{ url_for('admin.create_admin') }}" class="btn btn-outline-warning btn-block">
+            <i class="fas fa-user-plus mr-2"></i>Add Admin
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

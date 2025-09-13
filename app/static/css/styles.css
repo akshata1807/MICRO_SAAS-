@@ -1,0 +1,51 @@
+/* Typography */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial,
+    sans-serif;
+  color: #1f2937;
+  background: #f6f8fb;
+}
+
+a { color: #0b63f6; }
+a:hover { color: #0841a1; text-decoration: none; }
+
+/* Navbar */
+.navbar-brand { font-weight: 700; letter-spacing: 0.2px; }
+.navbar { box-shadow: 0 2px 8px rgba(16, 24, 40, 0.06); }
+
+/* Containers */
+.page-hero {
+  background: linear-gradient(135deg, #0b63f6 0%, #1f2dd6 100%);
+  color: #fff;
+  border-radius: 16px;
+  padding: 48px;
+}
+.page-hero h1 { font-weight: 800; }
+.page-hero .lead { opacity: 0.95; }
+
+.card {
+  border: 1px solid #e6eaf2;
+  border-radius: 12px;
+  box-shadow: 0 6px 14px rgba(16, 24, 40, 0.04);
+}
+
+.btn-primary {
+  background: #0b63f6;
+  border-color: #0b63f6;
+}
+.btn-primary:hover { background: #0841a1; border-color: #0841a1; }
+
+/* Footer */
+.site-footer {
+  color: #667085;
+  font-size: 14px;
+}
+
+
+
+
+
+
+
+

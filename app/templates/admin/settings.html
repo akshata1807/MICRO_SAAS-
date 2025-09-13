@@ -1,0 +1,137 @@
+{% extends "admin/layout.html" %}
+{% block title %}Admin Settings - MicroSaaS{% endblock %}
+{% block page_title %}Settings{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <div class="stats-card">
+      <h5 class="mb-3">
+        <i class="fas fa-cog text-primary mr-2"></i>System Settings
+      </h5>
+      
+      <form>
+        <div class="form-group">
+          <label for="site_name">Site Name</label>
+          <input type="text" class="form-control" id="site_name" value="MicroSaaS" readonly>
+          <small class="form-text text-muted">Site name cannot be changed from admin panel.</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="max_file_size">Max File Size (MB)</label>
+          <input type="number" class="form-control" id="max_file_size" value="10" readonly>
+          <small class="form-text text-muted">Maximum file size for uploads.</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="storage_quota">Storage Quota per User (MB)</label>
+          <input type="number" class="form-control" id="storage_quota" value="100" readonly>
+          <small class="form-text text-muted">Storage quota for each user.</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="email_notifications">Email Notifications</label>
+          <select class="form-control" id="email_notifications" disabled>
+            <option value="enabled" selected>Enabled</option>
+            <option value="disabled">Disabled</option>
+          </select>
+          <small class="form-text text-muted">Send email notifications to users.</small>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" disabled>
+          <i class="fas fa-save mr-2"></i>Save Settings
+        </button>
+        <small class="form-text text-muted ml-2">Settings are read-only in this demo.</small>
+      </form>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="stats-card">
+      <h5 class="mb-3">
+        <i class="fas fa-info-circle text-primary mr-2"></i>System Information
+      </h5>
+      
+      <div class="mb-3">
+        <strong>Database:</strong><br>
+        <small class="text-muted">SQLite (Development)</small>
+      </div>
+      
+      <div class="mb-3">
+        <strong>Python Version:</strong><br>
+        <small class="text-muted">3.13</small>
+      </div>
+      
+      <div class="mb-3">
+        <strong>Flask Version:</strong><br>
+        <small class="text-muted">3.1.2</small>
+      </div>
+      
+      <div class="mb-3">
+        <strong>Environment:</strong><br>
+        <span class="badge badge-warning">Development</span>
+      </div>
+    </div>
+    
+    <div class="stats-card">
+      <h5 class="mb-3">
+        <i class="fas fa-shield-alt text-primary mr-2"></i>Security
+      </h5>
+      
+      <div class="mb-3">
+        <strong>Admin Access:</strong><br>
+        <span class="badge badge-success">Protected</span>
+      </div>
+      
+      <div class="mb-3">
+        <strong>User Authentication:</strong><br>
+        <span class="badge badge-success">Active</span>
+      </div>
+      
+      <div class="mb-3">
+        <strong>File Uploads:</strong><br>
+        <span class="badge badge-success">Secure</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Maintenance Actions -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="stats-card">
+      <h5 class="mb-3">
+        <i class="fas fa-tools text-primary mr-2"></i>Maintenance Actions
+      </h5>
+      
+      <div class="row">
+        <div class="col-md-3 mb-3">
+          <button class="btn btn-outline-primary btn-block" disabled>
+            <i class="fas fa-database mr-2"></i>Backup Database
+          </button>
+        </div>
+        <div class="col-md-3 mb-3">
+          <button class="btn btn-outline-warning btn-block" disabled>
+            <i class="fas fa-broom mr-2"></i>Clean Old Files
+          </button>
+        </div>
+        <div class="col-md-3 mb-3">
+          <button class="btn btn-outline-info btn-block" disabled>
+            <i class="fas fa-chart-line mr-2"></i>Generate Reports
+          </button>
+        </div>
+        <div class="col-md-3 mb-3">
+          <button class="btn btn-outline-danger btn-block" disabled>
+            <i class="fas fa-exclamation-triangle mr-2"></i>System Restart
+          </button>
+        </div>
+      </div>
+      
+      <div class="alert alert-info mt-3">
+        <i class="fas fa-info-circle mr-2"></i>
+        <strong>Note:</strong> Maintenance actions are disabled in this demo version.
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

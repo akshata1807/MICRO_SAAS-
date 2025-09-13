@@ -1,0 +1,128 @@
+{% extends "admin/layout.html" %}
+{% block title %}User Management - MicroSaaS{% endblock %}
+{% block page_title %}User Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="mb-0">Users</h4>
+  <div>
+    <span class="text-muted">Total: {{ users.total }} users</span>
+  </div>
+</div>
+
+<div class="stats-card">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Files Created</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users.items %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>
+            <strong>{{ user.username }}</strong>
+          </td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span class="badge badge-primary">{{ user.invoices|length }}</span> Invoices
+            <span class="badge badge-success">{{ user.resumes|length }}</span> Resumes
+            <span class="badge badge-info">{{ user.certificates|length }}</span> Certificates
+            <span class="badge badge-warning">{{ user.qrcodes|length }}</span> QR Codes
+          </td>
+          <td>
+            {% if hasattr(user, 'is_active') and user.is_active %}
+              <span class="badge badge-success">Active</span>
+            {% else %}
+              <span class="badge badge-secondary">Inactive</span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="btn-group btn-group-sm" role="group">
+              <a href="{{ url_for('admin.toggle_user', user_id=user.id) }}" 
+                 class="btn btn-outline-{% if hasattr(user, 'is_active') and user.is_active %}warning{% else %}success{% endif %} btn-sm"
+                 title="{% if hasattr(user, 'is_active') and user.is_active %}Deactivate{% else %}Activate{% endif %} User">
+                <i class="fas fa-{% if hasattr(user, 'is_active') and user.is_active %}ban{% else %}check{% endif %}"></i>
+              </a>
+              <button type="button" class="btn btn-outline-danger btn-sm" 
+                      data-toggle="modal" data-target="#deleteModal{{ user.id }}"
+                      title="Delete User">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteModal{{ user.id }}" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to delete user <strong>{{ user.username }}</strong>?</p>
+                <p class="text-danger"><small>This action will permanently delete the user and all their files. This cannot be undone.</small></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" style="display: inline;">
+                  <button type="submit" class="btn btn-danger">Delete User</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Pagination -->
+  {% if users.pages > 1 %}
+  <nav aria-label="Users pagination">
+    <ul class="pagination justify-content-center">
+      {% if users.has_prev %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('admin.users', page=users.prev_num) }}">Previous</a>
+        </li>
+      {% endif %}
+      
+      {% for page_num in users.iter_pages() %}
+        {% if page_num %}
+          {% if page_num != users.page %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('admin.users', page=page_num) }}">{{ page_num }}</a>
+            </li>
+          {% else %}
+            <li class="page-item active">
+              <span class="page-link">{{ page_num }}</span>
+            </li>
+          {% endif %}
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">…</span>
+          </li>
+        {% endif %}
+      {% endfor %}
+      
+      {% if users.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('admin.users', page=users.next_num) }}">Next</a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block title %}Resume Builder{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-9 col-lg-8">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title mb-3">Resume Builder</h3>
+        <p class="text-muted">Provide your details and download a polished PDF.</p>
+        <form method="POST" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="form-row">
+            <div class="form-group col-md-8">
+              {{ form.name.label(class="form-label") }}
+              {{ form.name(class="form-control", placeholder="Enter your full name") }}
+            </div>
+            <div class="form-group col-md-4">
+              {{ form.phone.label(class="form-label") }}
+              {{ form.phone(class="form-control", placeholder="Phone (optional)") }}
+            </div>
+          </div>
+          <div class="form-group mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control", placeholder="Enter your email address") }}
+          </div>
+          <div class="form-group mb-3">
+            {{ form.education.label(class="form-label") }}
+            {{ form.education(class="form-control", rows=4, placeholder="List your education details") }}
+          </div>
+          <div class="form-group mb-3">
+            {{ form.skills.label(class="form-label") }}
+            {{ form.skills(class="form-control", rows=4, placeholder="List your skills") }}
+          </div>
+          <div class="form-group mb-3">
+            {{ form.experience.label(class="form-label") }}
+            {{ form.experience(class="form-control", rows=6, placeholder="List your work experience") }}
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">{{ form.submit.label.text }}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

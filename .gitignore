@@ -1,0 +1,65 @@
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Database files
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Flask instance folder
+instance/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+app.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Static files that shouldn't be committed
+app/static/uploads/
+app/static/certificates/
+app/static/invoices/
+app/static/resumes/
+
+# Node modules (if any)
+node_modules/
+
+# Distribution
+dist/
+build/
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# pytest cache
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints

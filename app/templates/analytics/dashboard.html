@@ -1,0 +1,274 @@
+{% extends "layout.html" %}
+{% block title %}Analytics Dashboard - MicroSaaS{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <div class="page-hero mb-4">
+      <h2 class="mb-2">Analytics Dashboard</h2>
+      <p class="lead mb-0">Comprehensive insights into your platform's performance</p>
+    </div>
+  </div>
+</div>
+
+<!-- Key Metrics -->
+<div class="row mb-4">
+  <div class="col-md-3 mb-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h3 class="text-primary mb-1">{{ user_stats.total_users }}</h3>
+        <p class="text-muted mb-0">Total Users</p>
+        <small class="text-success">{{ user_stats.active_users }} this period</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h3 class="text-success mb-1">{{ file_stats.total_files }}</h3>
+        <p class="text-muted mb-0">Files Generated</p>
+        <small class="text-info">{{ file_stats.avg_files_per_day }} avg/day</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h3 class="text-info mb-1">{{ subscription_stats.active_subscriptions }}</h3>
+        <p class="text-muted mb-0">Active Subscriptions</p>
+        <small class="text-warning">{{ subscription_stats.conversion_rate }}% conversion</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h3 class="text-warning mb-1">{{ user_stats.premium_users }}</h3>
+        <p class="text-muted mb-0">Premium Users</p>
+        <small class="text-primary">{{ user_stats.premium_rate }}% of total</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          <i class="fas fa-chart-line text-primary mr-2"></i>Daily Activity
+        </h5>
+        <canvas id="dailyActivityChart" height="300"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          <i class="fas fa-chart-pie text-success mr-2"></i>File Types
+        </h5>
+        <canvas id="fileTypesChart" height="300"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Detailed Stats -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          <i class="fas fa-users text-info mr-2"></i>User Statistics
+        </h5>
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <tbody>
+              <tr>
+                <td>Total Users</td>
+                <td class="text-right"><strong>{{ user_stats.total_users }}</strong></td>
+              </tr>
+              <tr>
+                <td>Verified Users</td>
+                <td class="text-right"><strong>{{ user_stats.verified_users }}</strong></td>
+              </tr>
+              <tr>
+                <td>Verification Rate</td>
+                <td class="text-right"><strong>{{ user_stats.verification_rate }}%</strong></td>
+              </tr>
+              <tr>
+                <td>Premium Users</td>
+                <td class="text-right"><strong>{{ user_stats.premium_users }}</strong></td>
+              </tr>
+              <tr>
+                <td>Premium Rate</td>
+                <td class="text-right"><strong>{{ user_stats.premium_rate }}%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          <i class="fas fa-file-alt text-warning mr-2"></i>File Generation
+        </h5>
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <tbody>
+              <tr>
+                <td>Invoices</td>
+                <td class="text-right"><strong>{{ file_stats.invoices }}</strong></td>
+              </tr>
+              <tr>
+                <td>Resumes</td>
+                <td class="text-right"><strong>{{ file_stats.resumes }}</strong></td>
+              </tr>
+              <tr>
+                <td>Certificates</td>
+                <td class="text-right"><strong>{{ file_stats.certificates }}</strong></td>
+              </tr>
+              <tr>
+                <td>QR Codes</td>
+                <td class="text-right"><strong>{{ file_stats.qrcodes }}</strong></td>
+              </tr>
+              <tr>
+                <td>Total Files</td>
+                <td class="text-right"><strong>{{ file_stats.total_files }}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Subscription Breakdown -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          <i class="fas fa-credit-card text-primary mr-2"></i>Subscription Breakdown
+        </h5>
+        <div class="row">
+          <div class="col-md-3 text-center">
+            <h4 class="text-primary">{{ subscription_stats.basic_count }}</h4>
+            <p class="text-muted">Basic Plans</p>
+          </div>
+          <div class="col-md-3 text-center">
+            <h4 class="text-info">{{ subscription_stats.pro_count }}</h4>
+            <p class="text-muted">Pro Plans</p>
+          </div>
+          <div class="col-md-3 text-center">
+            <h4 class="text-warning">{{ subscription_stats.premium_count }}</h4>
+            <p class="text-muted">Premium Plans</p>
+          </div>
+          <div class="col-md-3 text-center">
+            <h4 class="text-success">{{ subscription_stats.active_subscriptions }}</h4>
+            <p class="text-muted">Total Active</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Date Range Selector -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          <i class="fas fa-calendar text-secondary mr-2"></i>Date Range
+        </h5>
+        <div class="btn-group" role="group">
+          <a href="?days=7" class="btn btn-outline-primary {% if days == 7 %}active{% endif %}">7 Days</a>
+          <a href="?days=30" class="btn btn-outline-primary {% if days == 30 %}active{% endif %}">30 Days</a>
+          <a href="?days=90" class="btn btn-outline-primary {% if days == 90 %}active{% endif %}">90 Days</a>
+          <a href="?days=365" class="btn btn-outline-primary {% if days == 365 %}active{% endif %}">1 Year</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Daily Activity Chart
+const dailyData = {{ daily_activity | tojson }};
+const dailyLabels = dailyData.map(d => d.date);
+const dailyFiles = dailyData.map(d => d.total_files);
+const dailyUsers = dailyData.map(d => d.new_users);
+
+const dailyCtx = document.getElementById('dailyActivityChart').getContext('2d');
+new Chart(dailyCtx, {
+    type: 'line',
+    data: {
+        labels: dailyLabels,
+        datasets: [{
+            label: 'Files Generated',
+            data: dailyFiles,
+            borderColor: '#0b63f6',
+            backgroundColor: 'rgba(11, 99, 246, 0.1)',
+            tension: 0.4
+        }, {
+            label: 'New Users',
+            data: dailyUsers,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// File Types Chart
+const fileTypesCtx = document.getElementById('fileTypesChart').getContext('2d');
+new Chart(fileTypesCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Invoices', 'Resumes', 'Certificates', 'QR Codes'],
+        datasets: [{
+            data: [
+                {{ file_stats.invoices }},
+                {{ file_stats.resumes }},
+                {{ file_stats.certificates }},
+                {{ file_stats.qrcodes }}
+            ],
+            backgroundColor: [
+                '#0b63f6',
+                '#10b981',
+                '#3b82f6',
+                '#f59e0b'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "admin/layout.html" %}
+{% block title %}Create Admin User - MicroSaaS{% endblock %}
+{% block page_title %}Create Admin User{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="stats-card">
+      <h5 class="mb-3">
+        <i class="fas fa-user-plus text-primary mr-2"></i>Create New Admin User
+      </h5>
+      
+      <form method="POST">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" class="form-control" id="username" name="username" required>
+          <small class="form-text text-muted">Choose a unique username for the admin.</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" class="form-control" id="email" name="email" required>
+          <small class="form-text text-muted">Admin login email address.</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" name="password" required>
+          <small class="form-text text-muted">Choose a strong password for the admin account.</small>
+        </div>
+        
+        <div class="form-group">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="is_super_admin" name="is_super_admin">
+            <label class="form-check-label" for="is_super_admin">
+              Super Admin Access
+            </label>
+          </div>
+          <small class="form-text text-muted">Super admins can create other admin users and access all features.</small>
+        </div>
+        
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-user-plus mr-2"></i>Create Admin User
+          </button>
+          <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary ml-2">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+          </a>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Admin Guidelines -->
+    <div class="stats-card mt-4">
+      <h6 class="mb-3">
+        <i class="fas fa-info-circle text-info mr-2"></i>Admin Guidelines
+      </h6>
+      
+      <ul class="list-unstyled">
+        <li class="mb-2">
+          <i class="fas fa-check text-success mr-2"></i>
+          <strong>Regular Admin:</strong> Can manage users, view files, and access most features
+        </li>
+        <li class="mb-2">
+          <i class="fas fa-check text-success mr-2"></i>
+          <strong>Super Admin:</strong> Can create other admins and access all system features
+        </li>
+        <li class="mb-2">
+          <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+          <strong>Security:</strong> Choose strong passwords and limit admin access
+        </li>
+        <li class="mb-2">
+          <i class="fas fa-shield-alt text-info mr-2"></i>
+          <strong>Access Control:</strong> Only trusted users should have admin access
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

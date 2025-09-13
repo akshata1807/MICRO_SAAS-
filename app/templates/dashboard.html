@@ -1,0 +1,179 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <div class="page-hero mb-4">
+      <h2 class="mb-2">Welcome, {{ current_user.username }}!</h2>
+      <p class="lead mb-0">Quick access to your tools and recent files</p>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mb-4">
+  <div class="col-md-3 mb-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h3 class="text-primary mb-1">{{ invoice_count }}</h3>
+        <p class="text-muted mb-0">Invoices</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h3 class="text-success mb-1">{{ resume_count }}</h3>
+        <p class="text-muted mb-0">Resumes</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h3 class="text-info mb-1">{{ certificate_count }}</h3>
+        <p class="text-muted mb-0">Certificates</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h3 class="text-warning mb-1">{{ qrcode_count }}</h3>
+        <p class="text-muted mb-0">QR Codes</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tools -->
+<div class="row mb-4">
+  <div class="col-12">
+    <h4 class="mb-3">Create New</h4>
+  </div>
+  <div class="col-md-3 mb-4">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title">Invoices</h5>
+        <p class="text-muted">Generate branded invoices and download PDFs.</p>
+        <a class="btn btn-primary mt-auto" href="{{ url_for('main.invoice') }}">Open</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-4">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title">QR Codes</h5>
+        <p class="text-muted">Create and download QR codes instantly.</p>
+        <a class="btn btn-primary mt-auto" href="{{ url_for('main.qrcode_generator') }}">Open</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-4">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title">Resume</h5>
+        <p class="text-muted">Build a clean, professional resume PDF.</p>
+        <a class="btn btn-primary mt-auto" href="{{ url_for('main.resume_builder') }}">Open</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-4">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title">Certificate</h5>
+        <p class="text-muted">Create a polished certificate of completion.</p>
+        <a class="btn btn-primary mt-auto" href="{{ url_for('main.certificate_generator') }}">Open</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Files -->
+<div class="row">
+  <div class="col-12">
+    <h4 class="mb-3">Recent Files</h4>
+    <div class="card">
+      <div class="card-body">
+        {% if recent_invoices or recent_resumes or recent_certificates or recent_qrcodes %}
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Name/Title</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for invoice in recent_invoices %}
+                <tr>
+                  <td><span class="badge badge-primary">Invoice</span></td>
+                  <td>{{ invoice.company }} - {{ invoice.client }}</td>
+                  <td>{{ invoice.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                  <td>
+                    <a href="{{ url_for('static', filename=invoice.pdf_path.split('static/')[-1]) }}" 
+                       class="btn btn-sm btn-outline-primary" target="_blank">
+                      <i class="fas fa-download"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+                
+                {% for resume in recent_resumes %}
+                <tr>
+                  <td><span class="badge badge-success">Resume</span></td>
+                  <td>{{ resume.name }}</td>
+                  <td>{{ resume.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                  <td>
+                    <a href="{{ url_for('static', filename=resume.pdf_path.split('static/')[-1]) }}" 
+                       class="btn btn-sm btn-outline-primary" target="_blank">
+                      <i class="fas fa-download"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+                
+                {% for certificate in recent_certificates %}
+                <tr>
+                  <td><span class="badge badge-info">Certificate</span></td>
+                  <td>{{ certificate.recipient_name }} - {{ certificate.course_title }}</td>
+                  <td>{{ certificate.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                  <td>
+                    <a href="{{ url_for('static', filename=certificate.pdf_path.split('static/')[-1]) }}" 
+                       class="btn btn-sm btn-outline-primary" target="_blank">
+                      <i class="fas fa-download"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+                
+                {% for qrcode in recent_qrcodes %}
+                <tr>
+                  <td><span class="badge badge-warning">QR Code</span></td>
+                  <td>{{ qrcode.data[:50] }}{% if qrcode.data|length > 50 %}...{% endif %}</td>
+                  <td>{{ qrcode.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                  <td>
+                    <a href="{{ url_for('static', filename=qrcode.img_path.split('static/')[-1]) }}" 
+                       class="btn btn-sm btn-outline-primary" target="_blank">
+                      <i class="fas fa-download"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="text-center py-4">
+            <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No files created yet</h5>
+            <p class="text-muted">Start by creating your first document using the tools above.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}MicroSaaS{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('main.index') }}">MicroSaaS</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ml-auto">
+          {% if current_user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('main.invoice') }}">Invoice</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('main.qrcode_generator') }}">QR Codes</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('main.certificate_generator') }}">Certificate</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('main.resume_builder') }}">Resume</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="premiumDropdown" role="button" data-toggle="dropdown">
+                Premium
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ url_for('bulk.bulk_certificates') }}">Bulk Certificates</a>
+                <a class="dropdown-item" href="{{ url_for('analytics.analytics_dashboard') }}">Analytics</a>
+              </div>
+            </li>
+            <li class="nav-item"><a class="btn btn-sm btn-outline-secondary ml-2" href="{{ url_for('auth.logout') }}">Logout</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+            <li class="nav-item"><a class="btn btn-sm btn-primary ml-2" href="{{ url_for('auth.register') }}">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container mt-4 mb-5">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer py-4">
+    <div class="container d-flex justify-content-between">
+      <div>© {{ 2025 }} MicroSaaS</div>
+      <div>
+        <a href="{{ url_for('billing.subscribe') }}">Pricing</a>
+        {% if not current_user.is_authenticated %}
+          <span class="mx-2">·</span>
+          <a href="{{ url_for('auth.login') }}">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

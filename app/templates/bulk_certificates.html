@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block title %}Bulk Certificate Generator{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="page-hero mb-4">
+      <h2 class="mb-2">Bulk Certificate Generator</h2>
+      <p class="lead mb-0">Upload an Excel file to generate multiple certificates at once</p>
+    </div>
+    
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          <i class="fas fa-upload text-primary mr-2"></i>Upload Excel File
+        </h5>
+        
+        <form method="POST" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="file">Select Excel File (.xlsx, .xls) or CSV</label>
+            <input type="file" class="form-control-file" id="file" name="file" accept=".xlsx,.xls,.csv" required>
+            <small class="form-text text-muted">
+              The file should contain columns: recipient_name, course_title, issuer, date_issued, signature_name, signature_title
+            </small>
+          </div>
+          
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-magic mr-2"></i>Generate Certificates
+          </button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          <i class="fas fa-download text-success mr-2"></i>Download Template
+        </h5>
+        <p class="text-muted">Download our Excel template to see the required format and add your data.</p>
+        <a href="{{ url_for('bulk.download_template') }}" class="btn btn-outline-success">
+          <i class="fas fa-file-excel mr-2"></i>Download Template
+        </a>
+      </div>
+    </div>
+    
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          <i class="fas fa-info-circle text-info mr-2"></i>Instructions
+        </h5>
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Required Columns:</h6>
+            <ul class="list-unstyled">
+              <li><strong>recipient_name</strong> - Full name of the recipient</li>
+              <li><strong>course_title</strong> - Name of the course/program</li>
+              <li><strong>issuer</strong> - Organization issuing the certificate</li>
+              <li><strong>date_issued</strong> - Date of issue (YYYY-MM-DD format)</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6>Optional Columns:</h6>
+            <ul class="list-unstyled">
+              <li><strong>signature_name</strong> - Name of the signer</li>
+              <li><strong>signature_title</strong> - Title of the signer</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="alert alert-info mt-3">
+          <i class="fas fa-lightbulb mr-2"></i>
+          <strong>Tip:</strong> Download the template first to see the exact format, then replace the sample data with your actual certificate information.
+        </div>
+      </div>
+    </div>
+    
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          <i class="fas fa-lock text-warning mr-2"></i>Subscription Required
+        </h5>
+        <p class="text-muted mb-0">
+          Bulk operations are available for Pro and Premium subscribers only. 
+          <a href="{{ url_for('billing.subscribe') }}" class="text-primary">Upgrade your plan</a> to unlock this feature.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

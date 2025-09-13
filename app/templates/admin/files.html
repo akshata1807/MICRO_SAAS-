@@ -1,0 +1,161 @@
+{% extends "admin/layout.html" %}
+{% block title %}File Management - MicroSaaS{% endblock %}
+{% block page_title %}File Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="mb-0">Files</h4>
+  <div class="btn-group" role="group">
+    <a href="{{ url_for('admin.files', type='all') }}" 
+       class="btn btn-outline-primary {% if file_type == 'all' %}active{% endif %}">All Files</a>
+    <a href="{{ url_for('admin.files', type='invoices') }}" 
+       class="btn btn-outline-primary {% if file_type == 'invoices' %}active{% endif %}">Invoices</a>
+    <a href="{{ url_for('admin.files', type='resumes') }}" 
+       class="btn btn-outline-primary {% if file_type == 'resumes' %}active{% endif %}">Resumes</a>
+    <a href="{{ url_for('admin.files', type='certificates') }}" 
+       class="btn btn-outline-primary {% if file_type == 'certificates' %}active{% endif %}">Certificates</a>
+    <a href="{{ url_for('admin.files', type='qrcodes') }}" 
+       class="btn btn-outline-primary {% if file_type == 'qrcodes' %}active{% endif %}">QR Codes</a>
+  </div>
+</div>
+
+<div class="stats-card">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>User</th>
+          <th>Details</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for file in files.items %}
+        <tr>
+          <td>{{ file.id }}</td>
+          <td>
+            {% if file_type == 'invoices' or 'Invoice' in file.__class__.__name__ %}
+              <span class="badge badge-primary">Invoice</span>
+            {% elif file_type == 'resumes' or 'Resume' in file.__class__.__name__ %}
+              <span class="badge badge-success">Resume</span>
+            {% elif file_type == 'certificates' or 'Certificate' in file.__class__.__name__ %}
+              <span class="badge badge-info">Certificate</span>
+            {% elif file_type == 'qrcodes' or 'QRCode' in file.__class__.__name__ %}
+              <span class="badge badge-warning">QR Code</span>
+            {% else %}
+              <span class="badge badge-secondary">Unknown</span>
+            {% endif %}
+          </td>
+          <td>
+            <strong>{{ file.user.username }}</strong><br>
+            <small class="text-muted">{{ file.user.email }}</small>
+          </td>
+          <td>
+            {% if 'Invoice' in file.__class__.__name__ %}
+              <strong>{{ file.company }}</strong><br>
+              <small class="text-muted">Client: {{ file.client }}</small><br>
+              <small class="text-muted">Total: ₹{{ file.total }}</small>
+            {% elif 'Resume' in file.__class__.__name__ %}
+              <strong>{{ file.name }}</strong><br>
+              <small class="text-muted">{{ file.email }}</small>
+            {% elif 'Certificate' in file.__class__.__name__ %}
+              <strong>{{ file.recipient_name }}</strong><br>
+              <small class="text-muted">{{ file.course_title }}</small>
+            {% elif 'QRCode' in file.__class__.__name__ %}
+              <strong>QR Code</strong><br>
+              <small class="text-muted">{{ file.data[:50] }}{% if file.data|length > 50 %}...{% endif %}</small>
+            {% endif %}
+          </td>
+          <td>
+            <small>{{ file.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+          </td>
+          <td>
+            {% if hasattr(file, 'pdf_path') and file.pdf_path %}
+              <a href="{{ url_for('static', filename=file.pdf_path.split('static/')[-1]) }}" 
+                 class="btn btn-outline-primary btn-sm" target="_blank" title="Download PDF">
+                <i class="fas fa-download"></i>
+              </a>
+            {% elif hasattr(file, 'img_path') and file.img_path %}
+              <a href="{{ url_for('static', filename=file.img_path.split('static/')[-1]) }}" 
+                 class="btn btn-outline-primary btn-sm" target="_blank" title="Download Image">
+                <i class="fas fa-download"></i>
+              </a>
+            {% else %}
+              <span class="text-muted">No file</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Pagination -->
+  {% if files.pages > 1 %}
+  <nav aria-label="Files pagination">
+    <ul class="pagination justify-content-center">
+      {% if files.has_prev %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('admin.files', type=file_type, page=files.prev_num) }}">Previous</a>
+        </li>
+      {% endif %}
+      
+      {% for page_num in files.iter_pages() %}
+        {% if page_num %}
+          {% if page_num != files.page %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('admin.files', type=file_type, page=page_num) }}">{{ page_num }}</a>
+            </li>
+          {% else %}
+            <li class="page-item active">
+              <span class="page-link">{{ page_num }}</span>
+            </li>
+          {% endif %}
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">…</span>
+          </li>
+        {% endif %}
+      {% endfor %}
+      
+      {% if files.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('admin.files', type=file_type, page=files.next_num) }}">Next</a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+
+<!-- File Statistics -->
+<div class="row mt-4">
+  <div class="col-md-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">{{ files.total }}</p>
+      <p class="stats-label">Total Files</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">{{ files.items|length }}</p>
+      <p class="stats-label">This Page</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">{{ files.page }}</p>
+      <p class="stats-label">Current Page</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">{{ files.pages }}</p>
+      <p class="stats-label">Total Pages</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

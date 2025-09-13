@@ -1,0 +1,172 @@
+{% extends "admin/layout.html" %}
+{% block title %}Subscription Management - MicroSaaS{% endblock %}
+{% block page_title %}Subscription Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="mb-0">Subscriptions</h4>
+  <div>
+    <span class="text-muted">Total: {{ subscriptions.total }} subscriptions</span>
+  </div>
+</div>
+
+<div class="stats-card">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User</th>
+          <th>Plan</th>
+          <th>Status</th>
+          <th>Stripe ID</th>
+          <th>Created</th>
+          <th>Expires</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for subscription in subscriptions.items %}
+        <tr>
+          <td>{{ subscription.id }}</td>
+          <td>
+            <strong>{{ subscription.user.username }}</strong><br>
+            <small class="text-muted">{{ subscription.user.email }}</small>
+          </td>
+          <td>
+            <span class="badge badge-{% if subscription.plan == 'premium' %}warning{% elif subscription.plan == 'pro' %}info{% else %}primary{% endif %}">
+              {{ subscription.plan.title() }}
+            </span>
+          </td>
+          <td>
+            <span class="badge badge-{% if subscription.status == 'active' %}success{% elif subscription.status == 'canceled' %}danger{% else %}secondary{% endif %}">
+              {{ subscription.status.title() }}
+            </span>
+          </td>
+          <td>
+            <small class="text-muted">{{ subscription.stripe_subscription_id[:20] }}...</small>
+          </td>
+          <td>
+            <small>{{ subscription.created_at.strftime('%Y-%m-%d') }}</small>
+          </td>
+          <td>
+            {% if subscription.current_period_end %}
+              <small>{{ subscription.current_period_end.strftime('%Y-%m-%d') }}</small>
+            {% else %}
+              <small class="text-muted">N/A</small>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Pagination -->
+  {% if subscriptions.pages > 1 %}
+  <nav aria-label="Subscriptions pagination">
+    <ul class="pagination justify-content-center">
+      {% if subscriptions.has_prev %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('admin.subscriptions', page=subscriptions.prev_num) }}">Previous</a>
+        </li>
+      {% endif %}
+      
+      {% for page_num in subscriptions.iter_pages() %}
+        {% if page_num %}
+          {% if page_num != subscriptions.page %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('admin.subscriptions', page=page_num) }}">{{ page_num }}</a>
+            </li>
+          {% else %}
+            <li class="page-item active">
+              <span class="page-link">{{ page_num }}</span>
+            </li>
+          {% endif %}
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">…</span>
+          </li>
+        {% endif %}
+      {% endfor %}
+      
+      {% if subscriptions.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('admin.subscriptions', page=subscriptions.next_num) }}">Next</a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+
+<!-- Subscription Statistics -->
+<div class="row mt-4">
+  <div class="col-md-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">{{ subscriptions.total }}</p>
+      <p class="stats-label">Total Subscriptions</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">
+        {{ subscriptions.items | selectattr('status', 'equalto', 'active') | list | length }}
+      </p>
+      <p class="stats-label">Active</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">
+        {{ subscriptions.items | selectattr('status', 'equalto', 'canceled') | list | length }}
+      </p>
+      <p class="stats-label">Canceled</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stats-card text-center">
+      <p class="stats-number">
+        {{ subscriptions.items | selectattr('plan', 'equalto', 'premium') | list | length }}
+      </p>
+      <p class="stats-label">Premium Plans</p>
+    </div>
+  </div>
+</div>
+
+<!-- Revenue Overview -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="stats-card">
+      <h5 class="mb-3">
+        <i class="fas fa-chart-pie text-primary mr-2"></i>Plan Distribution
+      </h5>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="text-center">
+            <h3 class="text-primary">
+              {{ subscriptions.items | selectattr('plan', 'equalto', 'basic') | list | length }}
+            </h3>
+            <p class="text-muted">Basic Plans</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="text-center">
+            <h3 class="text-info">
+              {{ subscriptions.items | selectattr('plan', 'equalto', 'pro') | list | length }}
+            </h3>
+            <p class="text-muted">Pro Plans</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="text-center">
+            <h3 class="text-warning">
+              {{ subscriptions.items | selectattr('plan', 'equalto', 'premium') | list | length }}
+            </h3>
+            <p class="text-muted">Premium Plans</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

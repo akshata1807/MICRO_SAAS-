@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+{% block title %}MicroSaaS · Automate docs in minutes{% endblock %}
+{% block content %}
+  <section class="page-hero mb-5">
+    <div class="row align-items-center">
+      <div class="col-md-7">
+        <h1 class="mb-3">Create invoices, QR codes and resumes faster</h1>
+        <p class="lead mb-4">A simple toolkit for freelancers and small teams. Generate polished PDFs and assets in seconds.</p>
+        <div>
+          {% if current_user.is_authenticated %}
+            <a class="btn btn-light text-primary mr-2" href="{{ url_for('main.dashboard') }}">Go to Dashboard</a>
+            <a class="btn btn-outline-light" href="{{ url_for('billing.subscribe') }}">See Pricing</a>
+          {% else %}
+            <a class="btn btn-light text-primary mr-2" href="{{ url_for('auth.register') }}">Get Started</a>
+            <a class="btn btn-outline-light" href="{{ url_for('auth.login') }}">Sign In</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-md-5 mt-4 mt-md-0">
+        <div class="card p-3">
+          <div class="card-body">
+            <h5 class="card-title">What you can do</h5>
+            <ul class="mb-0">
+              <li>Generate clean, branded invoices</li>
+              <li>Create QR codes on the fly</li>
+              <li>Export a professional PDF resume</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Invoices</h5>
+            <p class="text-muted">Auto-format line items and totals with modern styling.</p>
+            <a class="btn btn-primary" href="{{ url_for('main.invoice') }}">Open invoice tool</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">QR Codes</h5>
+            <p class="text-muted">Create and download QR codes for links or text.</p>
+            <a class="btn btn-primary" href="{{ url_for('main.qrcode_generator') }}">Open QR tool</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Resume</h5>
+            <p class="text-muted">Produce a polished resume with clean typography.</p>
+            <a class="btn btn-primary" href="{{ url_for('main.resume_builder') }}">Open resume tool</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+
+
+
+
+
+
+

@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% block title %}Subscribe{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6">
+    <h2>Choose Your Subscription Plan</h2>
+    <form id="subscription-form" method="POST" action="#">
+      <div class="form-group mb-3">
+        <label for="plan">Select Plan</label>
+        <select id="plan" name="plan" class="form-control" required>
+          <option value="">-- Select Plan --</option>
+          <option value="basic" data-rz="{{ rz_plan_basic }}">Basic - ₹99/month</option>
+          <option value="pro" data-rz="{{ rz_plan_pro }}">Pro - ₹299/month</option>
+          <option value="premium" data-rz="{{ rz_plan_premium }}">Premium - ₹499/month</option>
+        </select>
+      </div>
+      <button id="rzp-button" type="button" class="btn btn-primary">Subscribe with Razorpay</button>
+    </form>
+  </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  const razorpayKey = "{{ razorpay_key }}";
+
+  const rzpBtn = document.getElementById('rzp-button');
+  rzpBtn.addEventListener('click', async () => {
+    const planSel = document.getElementById('plan');
+    const plan = planSel.value;
+    const rzPlanId = planSel.options[planSel.selectedIndex].getAttribute('data-rz');
+    if (!razorpayKey) {
+      alert('Razorpay not configured.');
+      return;
+    }
+    if (!rzPlanId) { alert('Plan not configured'); return; }
+
+    try {
+      const subRes = await fetch('/razorpay/create-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan })
+      });
+      const sub = await subRes.json();
+      if (sub.error) { alert(sub.error); return; }
+
+      const options = {
+        key: razorpayKey,
+        subscription_id: sub.id,
+        name: 'MicroSaaS',
+        description: `${plan} plan subscription`,
+        handler: async function (response){
+          const verifyRes = await fetch('/razorpay/verify-subscription', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              razorpay_subscription_id: response.razorpay_subscription_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature
+            })
+          });
+          const result = await verifyRes.json();
+          if (result.status === 'verified') {
+            window.location.href = '/subscription-success';
+          } else {
+            alert(result.error || 'Verification failed');
+          }
+        },
+        theme: { color: '#0b63f6' }
+      };
+      const rzp = new Razorpay(options);
+      rzp.open();
+    } catch (e) {
+      alert('Razorpay error. Please try again.');
+    }
+  });
+</script>
+{% endblock %}
