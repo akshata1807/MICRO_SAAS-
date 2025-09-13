@@ -228,8 +228,7 @@ Ensure all required environment variables are set for production:
 - Write tests for new features
 - Update documentation as needed
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+## Author
+Akshata Lonari
 
 
