@@ -222,11 +222,6 @@ Ensure all required environment variables are set for production:
 4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-### Code Standards
-- Follow PEP 8 style guidelines
-- Use descriptive commit messages
-- Write tests for new features
-- Update documentation as needed
 
 ## Author
 Akshata Lonari
