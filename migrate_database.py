@@ -24,6 +24,18 @@ def migrate_database():
                 else:
                     print(f"Error adding created_at to user table: {e}")
 
+            # Add last_login column to user table
+            try:
+                with db.engine.connect() as conn:
+                    conn.execute(text("ALTER TABLE user ADD COLUMN last_login DATETIME"))
+                    conn.commit()
+                print("Added last_login column to user table")
+            except Exception as e:
+                if "duplicate column name" in str(e):
+                    print("Column last_login already exists in user table")
+                else:
+                    print(f"Error adding last_login to user table: {e}")
+
             # Add subscription_status column to admin_user table
             try:
                 with db.engine.connect() as conn:

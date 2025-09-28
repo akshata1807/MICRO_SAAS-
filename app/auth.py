@@ -38,8 +38,18 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and check_password_hash(user.password, form.password.data):
             login_user(user)
+            user.last_login = datetime.utcnow()
+            db.session.commit()
+
+            # Log successful login
+            print(f"USER LOGIN: {user.username} ({user.email}) logged in at {datetime.utcnow()}")
+            logging.info(f"Login: User {user.username} ({user.email}) - IP: {request.remote_addr}")
+
             return redirect(url_for('main.dashboard'))
         else:
+            # Log failed login attempt
+            print(f"FAILED LOGIN: Attempted login with email {form.email.data} at {datetime.utcnow()}")
+            logging.warning(f"Failed login attempt: Email {form.email.data} - IP: {request.remote_addr}")
             flash('Login failed. Check your email and password.', 'danger')
     return render_template('login.html', form=form)
 
@@ -84,6 +94,11 @@ def resend_verification():
 
 @auth_bp.route('/logout')
 def logout():
+    if current_user.is_authenticated:
+        # Log logout
+        print(f"USER LOGOUT: {current_user.username} ({current_user.email}) logged out at {datetime.utcnow()}")
+        logging.info(f"Logout: User {current_user.username} ({current_user.email}) - IP: {request.remote_addr}")
+
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('auth.login'))

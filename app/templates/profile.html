@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <div class="page-hero mb-4">
+      <h2 class="mb-2">My Profile</h2>
+      <p class="lead mb-0">View your account information and usage statistics</p>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Profile Information -->
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Account Information</h5>
+        <table class="table table-borderless">
+          <tr>
+            <td><strong>Username:</strong></td>
+            <td>{{ current_user.username }}</td>
+          </tr>
+          <tr>
+            <td><strong>Email:</strong></td>
+            <td>{{ current_user.email }}</td>
+          </tr>
+          <tr>
+            <td><strong>Subscription Status:</strong></td>
+            <td>
+              <span class="badge badge-{% if current_user.subscription_status == 'free' %}secondary{% elif current_user.subscription_status == 'basic' %}primary{% elif current_user.subscription_status == 'pro' %}success{% else %}warning{% endif %}">
+                {{ current_user.subscription_status.title() }}
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Account Created:</strong></td>
+            <td>{{ current_user.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          </tr>
+          <tr>
+            <td><strong>Email Verified:</strong></td>
+            <td>
+              {% if current_user.is_verified %}
+                <span class="text-success"><i class="fas fa-check"></i> Yes</span>
+              {% else %}
+                <span class="text-warning"><i class="fas fa-exclamation-triangle"></i> No</span>
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Usage Statistics -->
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Usage Statistics</h5>
+        <div class="row text-center">
+          <div class="col-6 mb-3">
+            <div class="border rounded p-3">
+              <h3 class="text-primary">{{ invoice_count }}</h3>
+              <p class="text-muted mb-0">Invoices</p>
+            </div>
+          </div>
+          <div class="col-6 mb-3">
+            <div class="border rounded p-3">
+              <h3 class="text-success">{{ resume_count }}</h3>
+              <p class="text-muted mb-0">Resumes</p>
+            </div>
+          </div>
+          <div class="col-6 mb-3">
+            <div class="border rounded p-3">
+              <h3 class="text-info">{{ certificate_count }}</h3>
+              <p class="text-muted mb-0">Certificates</p>
+            </div>
+          </div>
+          <div class="col-6 mb-3">
+            <div class="border rounded p-3">
+              <h3 class="text-warning">{{ qrcode_count }}</h3>
+              <p class="text-muted mb-0">QR Codes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Links -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Quick Links</h5>
+        <div class="row">
+          <div class="col-md-3 mb-2">
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-primary btn-block">Dashboard</a>
+          </div>
+          <div class="col-md-3 mb-2">
+            <a href="{{ url_for('main.invoice') }}" class="btn btn-outline-primary btn-block">Create Invoice</a>
+          </div>
+          <div class="col-md-3 mb-2">
+            <a href="{{ url_for('main.resume_builder') }}" class="btn btn-outline-primary btn-block">Create Resume</a>
+          </div>
+          <div class="col-md-3 mb-2">
+            <a href="{{ url_for('main.qrcode_generator') }}" class="btn btn-outline-primary btn-block">Create QR Code</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -14,6 +14,7 @@ class User(db.Model, UserMixin):
     verification_token = db.Column(db.String(32))
     token_expires = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
 
 
 class AdminUser(db.Model, UserMixin):

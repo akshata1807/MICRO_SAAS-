@@ -305,6 +305,27 @@ def qrcode_generator():
 
     return render_template('qrcode.html', form=form, qr_img_data=qr_img_data)
 
+@main_bp.route('/qrcodes')
+@login_required
+def qrcodes():
+    qrcodes = QRCode.query.filter_by(user_id=current_user.id).order_by(QRCode.created_at.desc()).all()
+    return render_template('qrcodes.html', qrcodes=qrcodes)
+
+@main_bp.route('/profile')
+@login_required
+def profile():
+    # Get user stats
+    invoice_count = Invoice.query.filter_by(user_id=current_user.id).count()
+    resume_count = Resume.query.filter_by(user_id=current_user.id).count()
+    certificate_count = Certificate.query.filter_by(user_id=current_user.id).count()
+    qrcode_count = QRCode.query.filter_by(user_id=current_user.id).count()
+    
+    return render_template('profile.html',
+                          invoice_count=invoice_count,
+                          resume_count=resume_count,
+                          certificate_count=certificate_count,
+                          qrcode_count=qrcode_count)
+
 # Resume Builder with professional styling
 @main_bp.route('/resume', methods=['GET', 'POST'])
 @login_required

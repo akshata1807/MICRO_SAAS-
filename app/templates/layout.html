@@ -24,6 +24,17 @@
             <li class="nav-item"><a class="nav-link" href="{{ url_for('main.certificate_generator') }}">Certificate</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('main.resume_builder') }}">Resume</a></li>
             <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                <i class="fas fa-user"></i> {{ current_user.username }}
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ url_for('main.profile') }}">Profile</a>
+                <a class="dropdown-item" href="{{ url_for('main.qrcodes') }}">My QR Codes</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="premiumDropdown" role="button" data-toggle="dropdown">
                 Premium
               </a>
@@ -32,7 +43,6 @@
                 <a class="dropdown-item" href="{{ url_for('analytics.analytics_dashboard') }}">Analytics</a>
               </div>
             </li>
-            <li class="nav-item"><a class="btn btn-sm btn-outline-secondary ml-2" href="{{ url_for('auth.logout') }}">Logout</a></li>
           {% else %}
             <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
             <li class="nav-item"><a class="btn btn-sm btn-primary ml-2" href="{{ url_for('auth.register') }}">Register</a></li>
@@ -41,6 +51,14 @@
       </div>
     </div>
   </nav>
+
+  {% if current_user.is_authenticated %}
+  <div class="bg-light py-2">
+    <div class="container">
+      <small class="text-muted">Logged in as: <strong>{{ current_user.username }}</strong> ({{ current_user.email }})</small>
+    </div>
+  </div>
+  {% endif %}
 
   <main class="container mt-4 mb-5">
     {% with messages = get_flashed_messages(with_categories=true) %}
