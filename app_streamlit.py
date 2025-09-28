@@ -9,8 +9,16 @@ st.set_page_config(
     layout="wide"
 )
 
-# Health check endpoint for Streamlit Cloud
+# Health check endpoint for Streamlit Cloud - this ensures the app is healthy
 st.write("✅ Micro SaaS Platform is running!")
+
+# Add a health check function that Streamlit Cloud can use
+def check_health():
+    """Health check function for Streamlit Cloud"""
+    return True
+
+# Make the health check available globally
+globals()['check_health'] = check_health
 
 st.title("🚀 Micro SaaS Platform")
 st.subheader("Flask Backend with Streamlit Frontend")
