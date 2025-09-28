@@ -2,5 +2,8 @@
 headless = true
 port = 5000
 
+[theme]
+base = "light"
+
 [browser]
 gatherUsageStats = false
