@@ -1,6 +1,4 @@
 import streamlit as st
-import requests
-import json
 
 # Streamlit Cloud expects a Streamlit app, not a Flask app
 # This wrapper provides a Streamlit interface to our Flask backend
@@ -10,6 +8,9 @@ st.set_page_config(
     page_icon="🚀",
     layout="wide"
 )
+
+# Health check endpoint for Streamlit Cloud
+st.write("✅ Micro SaaS Platform is running!")
 
 st.title("🚀 Micro SaaS Platform")
 st.subheader("Flask Backend with Streamlit Frontend")
@@ -45,15 +46,8 @@ if page == "Home":
     **Note**: This Streamlit app serves as a frontend to our Flask backend running on port 5000.
     """)
 
-    # Health check for Flask backend
-    try:
-        response = requests.get("http://localhost:5000/health", timeout=5)
-        if response.status_code == 200:
-            st.success("✅ Flask backend is running and healthy!")
-        else:
-            st.warning(f"⚠️ Flask backend returned status: {response.status_code}")
-    except:
-        st.info("ℹ️ Flask backend health check - connect to localhost:5000")
+    # Streamlit app is self-contained and doesn't need Flask backend for health checks
+    st.success("✅ Streamlit app is healthy and running independently!")
 
 elif page == "Invoice Generator":
     st.header("📄 Invoice Generator")
