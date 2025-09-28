@@ -1,4 +1,5 @@
 # Streamlit Cloud Compatible Requirements
+# Core Flask Dependencies - Using stable versions
 Flask==3.0.0
 Flask-SQLAlchemy==3.1.1
 Flask-Login==0.6.3
@@ -28,7 +29,7 @@ Flask-Limiter==3.5.0
 # Environment Management
 python-dotenv==1.0.0
 
-# Utilities
+# Utilities - Using compatible versions
 Werkzeug==3.0.1
 WTForms==3.1.1
 itsdangerous==2.1.2
